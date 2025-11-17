@@ -7,7 +7,7 @@
 
                     {{-- Filtros --}}
                     <form method="GET" action="{{ route('admin.reportes.ventas') }}" class="mb-6 p-4 bg-gray-50 rounded-lg">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <div>
                                 <label class="block text-sm font-semibold mb-2">Desde:</label>
                                 <input type="date" name="desde" value="{{ $desde->format('Y-m-d') }}" class="w-full border rounded px-3 py-2">
@@ -15,6 +15,15 @@
                             <div>
                                 <label class="block text-sm font-semibold mb-2">Hasta:</label>
                                 <input type="date" name="hasta" value="{{ $hasta->format('Y-m-d') }}" class="w-full border rounded px-3 py-2">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Categoría:</label>
+                                <select name="categoria" class="w-full border rounded px-3 py-2">
+                                    <option value="">Todas las categorías</option>
+                                    @foreach($categorias as $cat)
+                                    <option value="{{ $cat }}" @if($categoria === $cat) selected @endif>{{ $cat }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="flex items-end gap-2">
                                 <button type="submit" class="flex-1 bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700">Filtrar</button>

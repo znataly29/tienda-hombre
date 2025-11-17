@@ -102,12 +102,23 @@ class ReporteController extends Controller
     {
         $desde = $request->input('desde') ? Carbon::parse($request->input('desde'))->startOfDay() : Carbon::now()->startOfMonth();
         $hasta = $request->input('hasta') ? Carbon::parse($request->input('hasta'))->endOfDay() : Carbon::now()->endOfDay();
+        $categoria = $request->input('categoria');
 
         $compras = Compra::where('estado', 'completada')
             ->whereBetween('created_at', [$desde, $hasta])
             ->with('usuario')
             ->orderBy('created_at', 'desc')
             ->get();
+
+        // Filtrar por categoría si se proporciona
+        if ($categoria) {
+            $compras = $compras->filter(function ($compra) use ($categoria) {
+                return collect($compra->detalles ?? [])->some(function ($detalle) use ($categoria) {
+                    $producto = Producto::find($detalle['producto_id']);
+                    return $producto && $producto->categoria === $categoria;
+                });
+            })->values();
+        }
 
         $totalVentas = $compras->sum('monto_total');
         $cantidadPedidos = $compras->count();
@@ -134,13 +145,16 @@ class ReporteController extends Controller
             $periodo->addDay();
         }
 
+        // Categorías disponibles
+        $categorias = Producto::distinct()->pluck('categoria')->filter()->values();
+
         $formato = $request->input('formato', 'view');
 
         if ($formato === 'pdf') {
-            return $this->generarPdfVentas(compact('compras', 'desde', 'hasta', 'totalVentas', 'cantidadPedidos', 'ticketPromedio', 'productosMasVendidos'));
+            return $this->generarPdfVentas(compact('compras', 'desde', 'hasta', 'totalVentas', 'cantidadPedidos', 'ticketPromedio', 'productosMasVendidos', 'categoria'));
         }
 
-        return view('admin.reportes.ventas', compact('compras', 'desde', 'hasta', 'totalVentas', 'cantidadPedidos', 'ticketPromedio', 'productosMasVendidos', 'ventasPorDia'));
+        return view('admin.reportes.ventas', compact('compras', 'desde', 'hasta', 'totalVentas', 'cantidadPedidos', 'ticketPromedio', 'productosMasVendidos', 'ventasPorDia', 'categorias', 'categoria'));
     }
 
     /**
