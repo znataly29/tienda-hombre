@@ -136,7 +136,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>📊 Dashboard de Reportes</h1>
+        <h1>Dashboard de Reportes</h1>
         <p>Tienda de Ropa para Hombre - {{ now()->format('d/m/Y H:i') }}</p>
     </div>
 
@@ -225,7 +225,7 @@
     {{-- Alertas de bajo stock --}}
     @if($bajoStock->count() > 0)
     <div class="seccion">
-        <div class="seccion-titulo">⚠️ Productos con Bajo Stock</div>
+        <div class="seccion-titulo">Productos con Bajo Stock</div>
         <div class="alerta-box">
             @foreach($bajoStock as $item)
             <div class="alerta-item">

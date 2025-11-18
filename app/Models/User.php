@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'telefono',
+        'direccion',
     ];
 
     /**
@@ -50,5 +52,15 @@ class User extends Authenticatable
     public function rol()
     {
         return $this->belongsTo(Rol::class, 'rol_id');
+    }
+
+    public function compras()
+    {
+        return $this->hasMany(Compra::class, 'usuario_id');
+    }
+
+    public function direcciones()
+    {
+        return $this->hasMany(DireccionEnvio::class, 'usuario_id');
     }
 }

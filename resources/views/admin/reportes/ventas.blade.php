@@ -81,7 +81,7 @@
 
                     {{-- Listado de compras --}}
                     <div>
-                        <h2 class="text-xl font-semibold mb-4">📋 Detalle de Compras</h2>
+                        <h2 class="text-xl font-semibold mb-4">Detalle de Compras</h2>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm">
                                 <thead class="bg-gray-100">

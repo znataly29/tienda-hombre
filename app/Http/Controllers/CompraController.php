@@ -18,6 +18,15 @@ class CompraController extends Controller
             return back()->with('error', 'El carrito está vacío');
         }
 
+        // Validar que hay suficiente inventario para todos los items
+        foreach ($items as $item) {
+            $inventario = \App\Models\Inventario::where('producto_id', $item->producto_id)->first();
+            
+            if (!$inventario || $inventario->cantidad < $item->cantidad) {
+                return back()->with('error', 'Producto agotado');
+            }
+        }
+
         $monto = $items->sum(function ($it) { return $it->cantidad * $it->precio_unitario; });
 
         DB::beginTransaction();
@@ -47,7 +56,7 @@ class CompraController extends Controller
                         'producto_id' => $item->producto_id,
                         'tipo' => 'salida',
                         'cantidad' => $item->cantidad,
-                        'motivo' => 'Compra #' . $compra->id,
+                        'motivo' => 'Compra #' . $compra->numero_compra,
                         'observacion' => 'Compra realizada por ' . $usuario->name,
                     ]);
                 }
@@ -60,7 +69,7 @@ class CompraController extends Controller
             return redirect()->route('cliente.historial')->with('mensaje', 'Compra confirmada');
         } catch (\Throwable $e) {
             DB::rollBack();
-            return back()->with('error', 'Error confirmando la compra');
+            return back()->with('error', 'Error confirmando la compra: ' . $e->getMessage());
         }
     }
 

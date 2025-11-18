@@ -5,6 +5,35 @@
                 <div class="p-6 text-gray-900">
                     <h1 class="text-3xl font-bold mb-6">Confirmación de Compra</h1>
 
+                    {{-- Mensajes de error --}}
+                    @if($errors->any())
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                            <div class="flex items-start gap-3">
+                                <span class="text-2xl">❌</span>
+                                <div>
+                                    <h3 class="font-semibold text-red-800 mb-2">Error en la compra</h3>
+                                    <ul class="text-sm text-red-700 space-y-1">
+                                        @foreach($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                            <div class="flex items-start gap-3">
+                                <span class="text-2xl">❌</span>
+                                <div>
+                                    <h3 class="font-semibold text-red-800 mb-2">Error</h3>
+                                    <p class="text-sm text-red-700">{{ session('error') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <form action="{{ route('checkout.finalizar') }}" method="POST">
                         @csrf
 

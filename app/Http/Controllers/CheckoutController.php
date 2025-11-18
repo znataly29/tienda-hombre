@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Carrito;
 use App\Models\Compra;
+use App\Models\Inventario;
+use App\Models\MovimientoInventario;
 use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
@@ -51,6 +53,15 @@ class CheckoutController extends Controller
             return redirect()->route('carrito.index')->with('error', 'Tu carrito está vacío.');
         }
 
+        // Validar que hay suficiente inventario para todos los items
+        foreach ($carrito as $item) {
+            $inventario = \App\Models\Inventario::where('producto_id', $item->producto_id)->first();
+            
+            if (!$inventario || $inventario->cantidad < $item->cantidad) {
+                return redirect()->route('carrito.index')->with('error', 'Producto agotado');
+            }
+        }
+
         // Calcular totales
         $subtotal = $carrito->sum(fn($item) => $item->cantidad * $item->precio_unitario);
         $envio = 5000;
@@ -59,6 +70,7 @@ class CheckoutController extends Controller
         // Crear compra con detalles de items
         $detalles = $carrito->map(function ($item) {
             return [
+                'producto_id' => $item->producto_id,
                 'nombre' => $item->producto->nombre,
                 'cantidad' => $item->cantidad,
                 'precio_unitario' => $item->precio_unitario,
@@ -66,21 +78,42 @@ class CheckoutController extends Controller
             ];
         })->toArray();
 
-        $compra = Compra::create([
-            'usuario_id' => $usuario->id,
-            'monto_total' => $total,
-            'estado' => 'completada',
-            'detalles' => $detalles,
-        ]);
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            $compra = Compra::create([
+                'usuario_id' => $usuario->id,
+                'monto_total' => $total,
+                'estado' => 'completada',
+                'detalles' => $detalles,
+            ]);
 
-        // Asociar items del carrito a la compra (guardar en tabla intermedia si existe)
-        // Si tienes una relación many-to-many, hazlo aquí:
-        // $compra->productos()->attach($carrito->pluck('producto_id')->toArray());
+            // Descontar inventario por cada producto comprado y registrar movimiento
+            foreach ($carrito as $item) {
+                $inventario = \App\Models\Inventario::where('producto_id', $item->producto_id)->first();
+                if ($inventario) {
+                    $inventario->decrement('cantidad', $item->cantidad);
+                    
+                    // Registrar movimiento de salida
+                    \App\Models\MovimientoInventario::create([
+                        'producto_id' => $item->producto_id,
+                        'tipo' => 'salida',
+                        'cantidad' => $item->cantidad,
+                        'motivo' => 'Compra #' . $compra->numero_compra,
+                        'observacion' => 'Compra realizada por ' . $usuario->name,
+                    ]);
+                }
+            }
 
-        // Limpiar carrito
-        Carrito::where('usuario_id', $usuario->id)->delete();
+            // Limpiar carrito
+            Carrito::where('usuario_id', $usuario->id)->delete();
 
-        return redirect()->route('compra.confirmada')->with('compra_id', $compra->id);
+            \Illuminate\Support\Facades\DB::commit();
+            
+            return redirect()->route('compra.confirmada', ['compra_id' => $compra->id])->with('compra_id', $compra->id);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return redirect()->route('carrito.index')->with('error', 'Error procesando la compra: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -88,13 +121,18 @@ class CheckoutController extends Controller
      */
     public function confirmada(Request $request)
     {
-        $compra_id = session('compra_id');
+        $compra_id = $request->query('compra_id') ?? session('compra_id');
 
         if (!$compra_id) {
             return redirect()->route('catalogo')->with('error', 'No hay compra para mostrar.');
         }
 
         $compra = Compra::findOrFail($compra_id);
+        
+        // Verificar que la compra pertenece al usuario autenticado
+        if ($compra->usuario_id !== $request->user()?->id) {
+            return redirect()->route('catalogo')->with('error', 'No tienes permiso para ver esta compra.');
+        }
 
         return view('compra-confirmada', compact('compra'));
     }

@@ -18,6 +18,13 @@ document.addEventListener('DOMContentLoaded', function(){
     async function agregarAlCarrito(e) {
         e.preventDefault();
         const btn = e.currentTarget || e.target;
+        
+        // Si el botón está deshabilitado, no hacer nada
+        if (btn.disabled) {
+            mostrarNotificacion('Este producto está agotado', 'warning');
+            return;
+        }
+        
         const id = btn.dataset.id;
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
         const nombreProducto = btn.closest('div')?.querySelector('h2')?.textContent || 'Producto';
@@ -57,7 +64,10 @@ document.addEventListener('DOMContentLoaded', function(){
                 }, 800);
             } else {
                 let text = 'No se pudo agregar el producto';
-                try { const errorData = await res.json(); text = errorData.message || text; } catch(e) {}
+                try { 
+                    const errorData = await res.json();
+                    text = errorData.message || text;
+                } catch(e) {}
                 mostrarNotificacion('Error: ' + text, 'error');
             }
         } catch (error) {
@@ -85,5 +95,25 @@ document.addEventListener('DOMContentLoaded', function(){
 
     // Actualizar contador al cargar la página
     actualizarContadorCarrito();
+
+    // Función para mostrar notificaciones
+    function mostrarNotificacion(mensaje, tipo = 'info') {
+        const notificacion = document.createElement('div');
+        notificacion.className = `fixed top-4 right-4 p-4 rounded-lg text-white font-semibold z-50 ${
+            tipo === 'success' ? 'bg-green-500' :
+            tipo === 'error' ? 'bg-red-500' :
+            tipo === 'warning' ? 'bg-yellow-500' :
+            'bg-blue-500'
+        }`;
+        notificacion.textContent = mensaje;
+        
+        document.body.appendChild(notificacion);
+        
+        // Remover después de 3 segundos
+        setTimeout(() => {
+            notificacion.remove();
+        }, 3000);
+    }
 });
+
 

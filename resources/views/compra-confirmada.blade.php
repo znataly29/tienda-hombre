@@ -4,7 +4,6 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-center text-gray-900">
                     <div class="mb-6">
-                        <div class="text-6xl text-green-600 mb-4">✓</div>
                         <h1 class="text-3xl font-bold text-green-600">¡Compra Confirmada!</h1>
                     </div>
 
@@ -13,7 +12,7 @@
                             Tu compra ha sido procesada exitosamente. Recibirás un correo de confirmación en breve.
                         </p>
                         <p class="text-lg font-semibold text-gray-900">
-                            Número de compra: <span class="text-green-600">#{{ $compra->id }}</span>
+                            Número de compra: <span class="text-green-600">#{{ $compra->numero_compra }}</span>
                         </p>
                     </div>
 

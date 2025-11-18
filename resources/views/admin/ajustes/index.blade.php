@@ -8,7 +8,7 @@
             <div class="bg-white rounded-lg shadow">
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-3xl font-bold">📋 Historial de Ajustes</h1>
+                        <h1 class="text-3xl font-bold">Historial de Ajustes</h1>
                         <a href="{{ route('admin.ajustes.crear') }}" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
                             ➕ Nuevo Ajuste
                         </a>

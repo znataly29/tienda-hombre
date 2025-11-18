@@ -30,7 +30,39 @@
                             <h2 class="font-bold">{{ $p->nombre }}</h2>
                             <p>{{ $p->descripcion }}</p>
                             <p class="font-semibold">${{ $p->precio }}</p>
-                            <button data-id="{{ $p->id }}" class="agregar-carrito bg-green-500 text-white px-3 py-1 mt-2">Agregar</button>
+                            
+                            {{-- Stock disponible --}}
+                            <div class="mt-2 mb-3">
+                                @if(auth()->user() && auth()->user()->rol && auth()->user()->rol->nombre === 'admin')
+                                    {{-- Admin ve el stock --}}
+                                    @if($p->inventario && $p->inventario->cantidad > 0)
+                                        <p class="text-sm text-green-600 font-semibold">
+                                            ✓ Stock: {{ $p->inventario->cantidad }} unidades
+                                        </p>
+                                    @else
+                                        <p class="text-sm text-red-600 font-semibold">
+                                            ✗ Agotado
+                                        </p>
+                                    @endif
+                                    <a href="{{ route('admin.dashboard') }}" class="inline-block bg-blue-500 text-white px-3 py-1 mt-2 hover:bg-blue-600 text-sm">
+                                        Ir al Panel
+                                    </a>
+                                @else
+                                    {{-- Clientes no ven el stock, solo pueden agregar o ver agotado --}}
+                                    @if($p->inventario && $p->inventario->cantidad > 0)
+                                        <button data-id="{{ $p->id }}" class="agregar-carrito bg-green-500 text-white px-3 py-1 mt-2 hover:bg-green-600 w-full">
+                                            Agregar
+                                        </button>
+                                    @else
+                                        <p class="text-sm text-red-600 font-semibold mb-2">
+                                            ✗ Agotado
+                                        </p>
+                                        <button disabled class="agregar-carrito bg-gray-400 text-white px-3 py-1 w-full cursor-not-allowed" title="Producto agotado">
+                                            Agregar
+                                        </button>
+                                    @endif
+                                @endif
+                            </div>
                         </div>
                     @endforeach
                 </div>

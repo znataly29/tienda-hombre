@@ -42,6 +42,14 @@ class CarritoController extends Controller
             'cantidad' => 'required|integer|min:1',
         ]);
 
+        // Verificar que el usuario no sea admin
+        if ($request->user() && $request->user()->rol && $request->user()->rol->nombre === 'admin') {
+            return response()->json([
+                'ok' => false,
+                'message' => 'Los administradores no pueden hacer compras',
+            ], 403);
+        }
+
         $producto = Producto::findOrFail($datos['producto_id']);
         // Si el usuario está autenticado, guardar en BD
         if ($request->user()) {

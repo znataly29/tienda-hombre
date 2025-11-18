@@ -132,7 +132,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>📊 Reporte de Ventas</h1>
+        <h1>Reporte de Ventas</h1>
         <p>Tienda de Ropa para Hombre</p>
     </div>
 

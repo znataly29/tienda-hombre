@@ -163,7 +163,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>📦 Reporte de Inventario</h1>
+        <h1>Reporte de Inventario</h1>
         <p>Tienda de Ropa para Hombre - Generado: {{ now()->format('d/m/Y H:i') }}</p>
     </div>
 
@@ -193,7 +193,7 @@
 
     {{-- Alertas --}}
     @if($bajoStock->count() > 0 || $agotados->count() > 0)
-    <div class="seccion-titulo">⚠️ Alertas de Stock</div>
+    <div class="seccion-titulo">Alertas de Stock</div>
     <div class="alertas">
         @foreach($agotados as $item)
         <div class="alerta-item">

@@ -18,7 +18,7 @@
                                 <div class="border rounded-lg p-4 hover:shadow-md transition">
                                     <div class="flex justify-between items-start mb-3">
                                         <div>
-                                            <h3 class="text-lg font-semibold">Compra #{{ $compra->id }}</h3>
+                                            <h3 class="text-lg font-semibold">Compra #{{ $compra->numero_compra }}</h3>
                                             <p class="text-sm text-gray-500">{{ $compra->created_at->format('d de F de Y - H:i') }}</p>
                                         </div>
                                         <span class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">

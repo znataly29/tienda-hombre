@@ -4,9 +4,9 @@
             <div class="bg-white rounded-lg shadow">
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-3xl font-bold">📦 Reporte de Inventario</h1>
+                        <h1 class="text-3xl font-bold">Reporte de Inventario</h1>
                         <a href="{{ route('admin.reportes.inventario', ['formato' => 'pdf']) }}" class="bg-red-600 text-white rounded px-4 py-2 hover:bg-red-700">
-                            📥 Descargar PDF
+                            Descargar PDF
                         </a>
                     </div>
 
@@ -33,7 +33,7 @@
                     {{-- Alertas de bajo stock --}}
                     @if($bajoStock->count() > 0)
                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                        <h2 class="text-lg font-semibold text-yellow-800 mb-3">⚠️ Productos con Bajo Stock (< 10 unidades)</h2>
+                        <h2 class="text-lg font-semibold text-yellow-800 mb-3">Productos con Bajo Stock (< 10 unidades)</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             @foreach($bajoStock as $item)
                                 <div class="bg-white p-3 rounded border-l-4 border-yellow-500">
@@ -61,7 +61,7 @@
 
                     {{-- Listado completo de inventario --}}
                     <div class="mb-6">
-                        <h2 class="text-xl font-semibold mb-4">📊 Inventario Completo</h2>
+                        <h2 class="text-xl font-semibold mb-4">Inventario Completo</h2>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm">
                                 <thead class="bg-gray-100">

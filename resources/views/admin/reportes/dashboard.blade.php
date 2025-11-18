@@ -2,10 +2,10 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex justify-between items-center mb-8">
-                <h1 class="text-4xl font-bold text-gray-900">📊 Dashboard de Reportes</h1>
+                <h1 class="text-4xl font-bold text-gray-900">Dashboard de Reportes</h1>
                 <div class="flex gap-2">
-                    <a href="{{ route('admin.reportes.ventas', ['formato' => 'pdf']) }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">📊 PDF Ventas</a>
-                    <a href="{{ route('admin.reportes.inventario', ['formato' => 'pdf']) }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">📦 PDF Inventario</a>
+                    <a href="{{ route('admin.reportes.ventas', ['formato' => 'pdf']) }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">PDF Ventas</a>
+                    <a href="{{ route('admin.reportes.inventario', ['formato' => 'pdf']) }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">PDF Inventario</a>
                 </div>
             </div>
 
@@ -18,7 +18,6 @@
                             <p class="text-gray-500 text-sm">Ventas Hoy</p>
                             <p class="text-3xl font-bold text-gray-900">${{ number_format($ventasHoy, 0) }}</p>
                         </div>
-                        <div class="text-4xl text-blue-600">💰</div>
                     </div>
                 </div>
 
@@ -29,7 +28,6 @@
                             <p class="text-gray-500 text-sm">Ventas Semana</p>
                             <p class="text-3xl font-bold text-gray-900">${{ number_format($ventasSemana, 0) }}</p>
                         </div>
-                        <div class="text-4xl text-green-600">📈</div>
                     </div>
                 </div>
 
@@ -40,7 +38,6 @@
                             <p class="text-gray-500 text-sm">Ventas Mes</p>
                             <p class="text-3xl font-bold text-gray-900">${{ number_format($ventasMes, 0) }}</p>
                         </div>
-                        <div class="text-4xl text-purple-600">💳</div>
                     </div>
                 </div>
 
@@ -51,7 +48,6 @@
                             <p class="text-gray-500 text-sm">Pedidos Confirmados</p>
                             <p class="text-3xl font-bold text-gray-900">{{ $comprasConfirmadas }}</p>
                         </div>
-                        <div class="text-4xl text-orange-600">📦</div>
                     </div>
                 </div>
             </div>
@@ -65,7 +61,6 @@
                             <p class="text-gray-500 text-sm">Ticket Promedio</p>
                             <p class="text-3xl font-bold text-gray-900">${{ number_format($ticketPromedio, 0) }}</p>
                         </div>
-                        <div class="text-4xl">🎯</div>
                     </div>
                 </div>
 
@@ -76,7 +71,6 @@
                             <p class="text-gray-500 text-sm">Stock Total</p>
                             <p class="text-3xl font-bold text-gray-900">{{ $inventarioTotal }} unidades</p>
                         </div>
-                        <div class="text-4xl">📦</div>
                     </div>
                 </div>
 
@@ -87,7 +81,6 @@
                             <p class="text-gray-500 text-sm">Valor Inventario</p>
                             <p class="text-3xl font-bold text-gray-900">${{ number_format($valorInventario, 0) }}</p>
                         </div>
-                        <div class="text-4xl text-yellow-600">💎</div>
                     </div>
                 </div>
 
@@ -99,7 +92,6 @@
                             <p class="text-3xl font-bold text-red-600">{{ $productosBajoStock }}</p>
                             <p class="text-xs text-gray-500 mt-1">{{ $productosAgotados }} agotados</p>
                         </div>
-                        <div class="text-4xl">⚠️</div>
                     </div>
                 </div>
             </div>
@@ -141,7 +133,7 @@
             {{-- Alertas de bajo stock --}}
             @if($bajoStock->count() > 0)
             <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
-                <h2 class="text-xl font-semibold mb-4 text-red-700">⚠️ Productos con Bajo Stock</h2>
+                <h2 class="text-xl font-semibold mb-4 text-red-700">Productos con Bajo Stock</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     @foreach($bajoStock as $item)
                         <div class="bg-white p-3 rounded border-l-4 border-red-500">
@@ -156,10 +148,10 @@
             {{-- Botones de reportes detallados --}}
             <div class="flex gap-4 justify-end">
                 <a href="{{ route('admin.reportes.ventas') }}" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                    📊 Ver Reporte de Ventas
+                    Ver Reporte de Ventas
                 </a>
                 <a href="{{ route('admin.reportes.inventario') }}" class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                    📦 Ver Reporte de Inventario
+                    Ver Reporte de Inventario
                 </a>
             </div>
         </div>
