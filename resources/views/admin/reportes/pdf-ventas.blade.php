@@ -200,7 +200,7 @@
             <tr>
                 <td>#{{ $compra->id }}</td>
                 <td>{{ $compra->usuario->name ?? 'Desconocido' }}</td>
-                <td>{{ $compra->created_at->format('d/m/Y H:i') }}</td>
+                <td>{{ $compra->created_at->format('d/m/Y') }}</td>
                 <td class="precio">${{ number_format($compra->monto_total, 0) }}</td>
                 <td>
                     <span style="background: #2ecc71; color: white; padding: 3px 8px; border-radius: 3px; font-size: 10px;">

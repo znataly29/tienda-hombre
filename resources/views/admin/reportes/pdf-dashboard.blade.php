@@ -137,7 +137,7 @@
 <body>
     <div class="header">
         <h1>Dashboard de Reportes</h1>
-        <p>Tienda de Ropa para Hombre - {{ now()->format('d/m/Y H:i') }}</p>
+        <p>Tienda de Ropa para Hombre - {{ now()->format('d/m/Y') }}</p>
     </div>
 
     {{-- Métricas principales --}}

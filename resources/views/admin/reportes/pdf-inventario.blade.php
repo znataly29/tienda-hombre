@@ -164,7 +164,7 @@
 <body>
     <div class="header">
         <h1>Reporte de Inventario</h1>
-        <p>Tienda de Ropa para Hombre - Generado: {{ now()->format('d/m/Y H:i') }}</p>
+        <p>Tienda de Ropa para Hombre - Generado: {{ now()->format('d/m/Y') }}</p>
     </div>
 
     {{-- Resumen --}}
@@ -275,7 +275,7 @@
                 </td>
                 <td class="cantidad">{{ $movimiento->cantidad }}</td>
                 <td>{{ $movimiento->motivo }}</td>
-                <td>{{ $movimiento->created_at->format('d/m/Y H:i') }}</td>
+                <td>{{ $movimiento->created_at->format('d/m/Y') }}</td>
             </tr>
             @empty
             <tr>
