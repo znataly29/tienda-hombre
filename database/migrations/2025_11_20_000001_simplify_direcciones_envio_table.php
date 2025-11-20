@@ -12,41 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('direcciones_envio', function (Blueprint $table) {
-            // Eliminar columnas que no necesitamos
-            if (Schema::hasColumn('direcciones_envio', 'nombre_direccion')) {
-                $table->dropColumn('nombre_direccion');
-            }
-            if (Schema::hasColumn('direcciones_envio', 'calle')) {
-                $table->dropColumn('calle');
-            }
-            if (Schema::hasColumn('direcciones_envio', 'numero')) {
-                $table->dropColumn('numero');
-            }
-            if (Schema::hasColumn('direcciones_envio', 'apartamento')) {
-                $table->dropColumn('apartamento');
-            }
-            if (Schema::hasColumn('direcciones_envio', 'ciudad')) {
-                $table->dropColumn('ciudad');
-            }
-            if (Schema::hasColumn('direcciones_envio', 'departamento')) {
-                $table->dropColumn('departamento');
-            }
-            if (Schema::hasColumn('direcciones_envio', 'codigo_postal')) {
-                $table->dropColumn('codigo_postal');
-            }
-            if (Schema::hasColumn('direcciones_envio', 'telefono')) {
-                $table->dropColumn('telefono');
-            }
-
-            // Agregar nuevas columnas
+            // Agregar nuevas columnas primero
             if (!Schema::hasColumn('direcciones_envio', 'direccion')) {
-                $table->string('direccion')->after('usuario_id');
+                $table->string('direccion')->nullable()->after('usuario_id');
             }
             if (!Schema::hasColumn('direcciones_envio', 'barrio')) {
-                $table->string('barrio')->after('direccion');
+                $table->string('barrio')->nullable()->after('direccion');
             }
             if (!Schema::hasColumn('direcciones_envio', 'tipo_inmueble')) {
-                $table->enum('tipo_inmueble', ['casa', 'apartamento', 'oficina', 'otro'])->after('barrio');
+                $table->enum('tipo_inmueble', ['casa', 'apartamento', 'oficina', 'otro'])->default('apartamento')->after('barrio');
             }
         });
     }
@@ -57,7 +31,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('direcciones_envio', function (Blueprint $table) {
-            // Revertir cambios
             if (Schema::hasColumn('direcciones_envio', 'direccion')) {
                 $table->dropColumn('direccion');
             }
@@ -67,16 +40,6 @@ return new class extends Migration
             if (Schema::hasColumn('direcciones_envio', 'tipo_inmueble')) {
                 $table->dropColumn('tipo_inmueble');
             }
-
-            // Restaurar columnas originales
-            $table->string('nombre_direccion');
-            $table->string('calle');
-            $table->string('numero', 50);
-            $table->string('apartamento', 50)->nullable();
-            $table->string('ciudad');
-            $table->string('departamento');
-            $table->string('codigo_postal', 20);
-            $table->string('telefono', 20)->nullable();
         });
     }
 };
