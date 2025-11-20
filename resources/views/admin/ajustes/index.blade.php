@@ -30,7 +30,7 @@
                             <tbody>
                                 @forelse($ajustes as $ajuste)
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-3">{{ $ajuste->created_at->format('d/m/Y H:i') }}</td>
+                                    <td class="px-4 py-3">{{ $ajuste->created_at->format('d/m/Y') }}</td>
                                     <td class="px-4 py-3 font-semibold">{{ $ajuste->producto->nombre }}</td>
                                     <td class="px-4 py-3 text-center">
                                         @if($ajuste->tipo === 'entrada')
