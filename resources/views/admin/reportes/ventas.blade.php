@@ -98,7 +98,7 @@
                                         <tr class="border-b hover:bg-gray-50">
                                             <td class="px-4 py-3 font-semibold">#{{ $compra->id }}</td>
                                             <td class="px-4 py-3">{{ $compra->usuario->name }}</td>
-                                            <td class="px-4 py-3 text-center text-sm">{{ $compra->created_at->format('d/m/Y H:i') }}</td>
+                                            <td class="px-4 py-3 text-center text-sm">{{ $compra->created_at->format('d/m/Y') }}</td>
                                             <td class="px-4 py-3 text-right font-semibold">${{ number_format($compra->monto_total, 0) }}</td>
                                             <td class="px-4 py-3 text-center">
                                                 <span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">{{ ucfirst($compra->estado) }}</span>

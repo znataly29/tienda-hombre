@@ -217,7 +217,7 @@
     </table>
 
     <div class="footer">
-        <p>Reporte generado el {{ now()->format('d/m/Y H:i:s') }}</p>
+        <p>Reporte generado el {{ now()->format('d/m/Y') }}</p>
         <p>© 2025 Tienda de Ropa para Hombre - Todos los derechos reservados</p>
     </div>
 </body>
