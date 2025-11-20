@@ -158,12 +158,12 @@
                                 @csrf
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="md:col-span-2">
-                                        <label for="direccion" class="block text-sm font-semibold text-gray-700 mb-2">Dirección *</label>
-                                        <input type="text" id="direccion" name="direccion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Carrera 7 #45-23" required>
+                                        <label for="direccion" class="block text-sm font-semibold text-gray-700 mb-2">Dirección * (mín. 5 caracteres)</label>
+                                        <input type="text" id="direccion" name="direccion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Carrera 7 #45-23" minlength="5" maxlength="255" required>
                                     </div>
                                     <div>
-                                        <label for="barrio" class="block text-sm font-semibold text-gray-700 mb-2">Barrio *</label>
-                                        <input type="text" id="barrio" name="barrio" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: La Candelaria" required>
+                                        <label for="barrio" class="block text-sm font-semibold text-gray-700 mb-2">Barrio * (mín. 3 caracteres)</label>
+                                        <input type="text" id="barrio" name="barrio" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: La Candelaria" minlength="3" maxlength="255" required>
                                     </div>
                                     <div>
                                         <label for="tipo_inmueble" class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Inmueble *</label>

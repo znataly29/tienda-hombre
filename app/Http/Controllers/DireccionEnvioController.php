@@ -13,9 +13,12 @@ class DireccionEnvioController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'direccion' => 'required|string|max:255',
-            'barrio' => 'required|string|max:255',
+            'direccion' => 'required|string|min:5|max:255',
+            'barrio' => 'required|string|min:3|max:255',
             'tipo_inmueble' => 'required|string|in:casa,apartamento,oficina,otro',
+        ], [
+            'direccion.min' => 'La dirección debe tener al menos 5 caracteres.',
+            'barrio.min' => 'El barrio debe tener al menos 3 caracteres.',
         ]);
 
         // Si es la primera dirección, marcarla como principal
@@ -41,9 +44,12 @@ class DireccionEnvioController extends Controller
         }
 
         $validated = $request->validate([
-            'direccion' => 'required|string|max:255',
-            'barrio' => 'required|string|max:255',
+            'direccion' => 'required|string|min:5|max:255',
+            'barrio' => 'required|string|min:3|max:255',
             'tipo_inmueble' => 'required|string|in:casa,apartamento,oficina,otro',
+        ], [
+            'direccion.min' => 'La dirección debe tener al menos 5 caracteres.',
+            'barrio.min' => 'El barrio debe tener al menos 3 caracteres.',
         ]);
 
         $direccion->update($validated);
