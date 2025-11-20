@@ -48,9 +48,9 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- SECCIÓN 2: HISTORIAL DE COMPRAS RECIENTES (Main Content - 2 columns) -->
-                <div class="lg:col-span-2">
+            <div class="grid grid-cols-1 gap-8">
+                <!-- SECCIÓN 2: HISTORIAL DE COMPRAS RECIENTES -->
+                <div>
                     <div class="bg-white rounded-lg shadow-sm sm:rounded-lg p-6 mb-8">
                         <div class="flex justify-between items-center mb-6">
                             <h2 class="text-2xl font-bold text-gray-900">Compras Recientes</h2>
@@ -109,68 +109,132 @@
                                 <label class="text-sm text-gray-600 font-semibold">Email</label>
                                 <p class="text-lg text-gray-900">{{ $user->email }}</p>
                             </div>
-                            <div>
-                                <label class="text-sm text-gray-600 font-semibold">Teléfono</label>
-                                <p class="text-lg text-gray-900">{{ $user->telefono ?? 'No registrado' }}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm text-gray-600 font-semibold">Dirección de Envío Principal</label>
-                                <p class="text-lg text-gray-900">{{ $user->direccion ?? 'No registrada' }}</p>
-                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- SECCIÓN 4: MIS DIRECCIONES DE ENVÍO (Sidebar - 1 column) -->
-                <div class="lg:col-span-1">
-                    <div class="bg-white rounded-lg shadow-sm sm:rounded-lg p-6 sticky top-4">
+                    <!-- SECCIÓN 4: TELÉFONO -->
+                    <div class="bg-white rounded-lg shadow-sm sm:rounded-lg p-6">
                         <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-xl font-bold text-gray-900">Mis Direcciones</h2>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">
-                                +
-                            </a>
+                            <h2 class="text-2xl font-bold text-gray-900">Teléfono</h2>
+                            <button onclick="document.getElementById('editPhoneForm').classList.toggle('hidden')" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">
+                                Editar ✎
+                            </button>
                         </div>
 
+                        <div id="phoneDisplay" class="mb-4">
+                            <p class="text-lg text-gray-900">{{ $user->telefono ?? 'No registrado' }}</p>
+                        </div>
+
+                        <div id="editPhoneForm" class="hidden border-t pt-4">
+                            <form action="{{ route('cliente.telefono.update') }}" method="POST" class="space-y-4">
+                                @csrf
+                                @method('PUT')
+                                <div>
+                                    <label for="telefono" class="block text-sm font-semibold text-gray-700 mb-2">Nuevo Teléfono</label>
+                                    <input type="tel" id="telefono" name="telefono" value="{{ $user->telefono }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: +57 320 123 4567">
+                                </div>
+                                <div class="flex gap-2">
+                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Guardar</button>
+                                    <button type="button" onclick="document.getElementById('editPhoneForm').classList.add('hidden')" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 5: MIS DIRECCIONES -->
+                    <div class="bg-white rounded-lg shadow-sm sm:rounded-lg p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-bold text-gray-900">Mis Direcciones</h2>
+                            <button onclick="document.getElementById('addAddressForm').classList.toggle('hidden')" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">
+                                + Agregar Dirección
+                            </button>
+                        </div>
+
+                        <!-- Formulario para agregar dirección -->
+                        <div id="addAddressForm" class="hidden bg-gray-50 p-6 rounded-lg mb-6 border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Nueva Dirección</h3>
+                            <form action="{{ route('cliente.direcciones.store') }}" method="POST" class="space-y-4">
+                                @csrf
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="nombre_direccion" class="block text-sm font-semibold text-gray-700 mb-2">Nombre de la Dirección *</label>
+                                        <input type="text" id="nombre_direccion" name="nombre_direccion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Casa, Oficina" required>
+                                    </div>
+                                    <div>
+                                        <label for="ciudad" class="block text-sm font-semibold text-gray-700 mb-2">Ciudad *</label>
+                                        <input type="text" id="ciudad" name="ciudad" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Bogotá" required>
+                                    </div>
+                                    <div>
+                                        <label for="departamento" class="block text-sm font-semibold text-gray-700 mb-2">Departamento *</label>
+                                        <input type="text" id="departamento" name="departamento" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Cundinamarca" required>
+                                    </div>
+                                    <div>
+                                        <label for="codigo_postal" class="block text-sm font-semibold text-gray-700 mb-2">Código Postal *</label>
+                                        <input type="text" id="codigo_postal" name="codigo_postal" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: 110111" required>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label for="calle" class="block text-sm font-semibold text-gray-700 mb-2">Calle *</label>
+                                        <input type="text" id="calle" name="calle" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Carrera 7" required>
+                                    </div>
+                                    <div>
+                                        <label for="numero" class="block text-sm font-semibold text-gray-700 mb-2">Número *</label>
+                                        <input type="text" id="numero" name="numero" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: 45-23" required>
+                                    </div>
+                                    <div>
+                                        <label for="apartamento" class="block text-sm font-semibold text-gray-700 mb-2">Apartamento (Opcional)</label>
+                                        <input type="text" id="apartamento" name="apartamento" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: 301">
+                                    </div>
+                                    <div>
+                                        <label for="telefono_dir" class="block text-sm font-semibold text-gray-700 mb-2">Teléfono (Opcional)</label>
+                                        <input type="tel" id="telefono_dir" name="telefono" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: +57 320 123 4567">
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Guardar Dirección</button>
+                                    <button type="button" onclick="document.getElementById('addAddressForm').classList.add('hidden')" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Lista de direcciones -->
                         @if($direcciones->isEmpty())
                             <div class="text-center py-8">
-                                <p class="text-gray-500 text-sm mb-4">No tienes direcciones guardadas</p>
-                                <button class="w-full bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 text-sm">
-                                    Agregar Dirección
-                                </button>
+                                <p class="text-gray-500 text-sm">No tienes direcciones guardadas aún</p>
                             </div>
                         @else
                             <div class="space-y-3">
                                 @foreach($direcciones as $dir)
                                     <div class="border rounded-lg p-4 @if($dir->es_principal) border-blue-500 bg-blue-50 @endif">
                                         <div class="flex justify-between items-start mb-2">
-                                            <h3 class="font-semibold text-gray-900">{{ $dir->nombre_direccion }}</h3>
+                                            <div>
+                                                <h3 class="font-semibold text-gray-900">{{ $dir->nombre_direccion }}</h3>
+                                                <p class="text-sm text-gray-600">{{ $dir->calle }} #{{ $dir->numero }}@if($dir->apartamento), {{ $dir->apartamento }}@endif</p>
+                                                <p class="text-sm text-gray-600">{{ $dir->ciudad }}, {{ $dir->departamento }} - CP: {{ $dir->codigo_postal }}</p>
+                                                @if($dir->telefono)
+                                                    <p class="text-sm text-gray-600">Tel: {{ $dir->telefono }}</p>
+                                                @endif
+                                            </div>
                                             @if($dir->es_principal)
                                                 <span class="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">Principal</span>
                                             @endif
                                         </div>
-                                        <p class="text-sm text-gray-600 mb-3">
-                                            {{ $dir->calle }} #{{ $dir->numero }}
-                                            @if($dir->apartamento), {{ $dir->apartamento }} @endif<br>
-                                            {{ $dir->ciudad }}, {{ $dir->departamento }}<br>
-                                            CP: {{ $dir->codigo_postal }}
-                                        </p>
-                                        @if($dir->telefono)
-                                            <p class="text-sm text-gray-600 mb-3">📞 {{ $dir->telefono }}</p>
-                                        @endif
-                                        <div class="flex gap-2 text-xs">
-                                            <button class="text-blue-600 hover:text-blue-800 font-semibold">Editar</button>
+                                        <div class="flex gap-3 text-sm mt-3 pt-3 border-t">
+                                            <button onclick="editAddress({{ $dir->id }})" class="text-blue-600 hover:text-blue-800 font-semibold">Editar</button>
                                             @if(!$dir->es_principal)
-                                                <button class="text-gray-600 hover:text-gray-800 font-semibold">Hacer Principal</button>
+                                                <form action="{{ route('cliente.direcciones.principal', $dir->id) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    <button type="submit" class="text-gray-600 hover:text-gray-800 font-semibold">Hacer Principal</button>
+                                                </form>
                                             @endif
-                                            <button class="text-red-600 hover:text-red-800 font-semibold">Eliminar</button>
+                                            <form action="{{ route('cliente.direcciones.destroy', $dir->id) }}" method="POST" class="inline" onsubmit="return confirm('¿Eliminar esta dirección?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-800 font-semibold">Eliminar</button>
+                                            </form>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
-
-                            <button class="w-full mt-4 bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 text-sm">
-                                + Agregar Dirección
-                            </button>
                         @endif
                     </div>
                 </div>

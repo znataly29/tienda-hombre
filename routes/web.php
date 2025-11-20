@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\CompraController;
+use App\Http\Controllers\DireccionEnvioController;
+use App\Http\Controllers\ClienteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -36,6 +38,15 @@ Route::middleware('auth')->group(function () {
     
     // Rutas específicas de cliente
     Route::get('/cliente/dashboard', [\App\Http\Controllers\ClienteDashboardController::class, 'index'])->name('cliente.dashboard');
+    
+    // Direcciones de envío
+    Route::post('/cliente/direcciones', [DireccionEnvioController::class, 'store'])->name('cliente.direcciones.store');
+    Route::put('/cliente/direcciones/{direccion}', [DireccionEnvioController::class, 'update'])->name('cliente.direcciones.update');
+    Route::post('/cliente/direcciones/{direccion}/principal', [DireccionEnvioController::class, 'marcarPrincipal'])->name('cliente.direcciones.principal');
+    Route::delete('/cliente/direcciones/{direccion}', [DireccionEnvioController::class, 'destroy'])->name('cliente.direcciones.destroy');
+    
+    // Teléfono del cliente
+    Route::put('/cliente/telefono', [ClienteController::class, 'actualizarTelefono'])->name('cliente.telefono.update');
 });
 
 // Dashboard para admin (protegido por rol)
