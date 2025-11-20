@@ -107,7 +107,7 @@ class ReporteController extends Controller
         $compras = Compra::where('estado', 'completada')
             ->whereBetween('created_at', [$desde, $hasta])
             ->with('usuario')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->get();
 
         // Filtrar por categoría si se proporciona
