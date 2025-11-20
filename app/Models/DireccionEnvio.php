@@ -13,14 +13,9 @@ class DireccionEnvio extends Model
 
     protected $fillable = [
         'usuario_id',
-        'nombre_direccion',
-        'calle',
-        'numero',
-        'apartamento',
-        'ciudad',
-        'departamento',
-        'codigo_postal',
-        'telefono',
+        'direccion',
+        'barrio',
+        'tipo_inmueble',
         'es_principal',
     ];
 
