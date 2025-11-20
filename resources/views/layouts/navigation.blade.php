@@ -25,7 +25,7 @@
             @auth
             <div class="hidden sm:flex sm:items-center sm:ms-6 gap-4">
                 <!-- Carrito Link + preview (solo para clientes) -->
-                @if(!auth()->user()->hasRole('admin'))
+                @if(auth()->user()->rol?->nombre !== 'admin')
                 @php
                     if (auth()->check()) {
                         $carritoCount = \App\Models\Carrito::where('usuario_id', auth()->id())->sum('cantidad');
@@ -159,7 +159,7 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                @if(!auth()->user()->hasRole('admin'))
+                @if(auth()->user()->rol?->nombre !== 'admin')
                 <x-responsive-nav-link :href="route('carrito.index')">
                     Carrito
                 </x-responsive-nav-link>
