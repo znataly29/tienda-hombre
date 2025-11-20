@@ -24,7 +24,8 @@
             <!-- Settings Dropdown -->
             @auth
             <div class="hidden sm:flex sm:items-center sm:ms-6 gap-4">
-                <!-- Carrito Link + preview -->
+                <!-- Carrito Link + preview (solo para clientes) -->
+                @if(!auth()->user()->hasRole('admin'))
                 @php
                     if (auth()->check()) {
                         $carritoCount = \App\Models\Carrito::where('usuario_id', auth()->id())->sum('cantidad');
@@ -73,6 +74,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -157,9 +159,11 @@
             </div>
 
             <div class="mt-3 space-y-1">
+                @if(!auth()->user()->hasRole('admin'))
                 <x-responsive-nav-link :href="route('carrito.index')">
                     Carrito
                 </x-responsive-nav-link>
+                @endif
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
