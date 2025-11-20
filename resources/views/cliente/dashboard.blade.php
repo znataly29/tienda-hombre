@@ -37,9 +37,9 @@
                 <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6">
                     <div>
                         <p class="text-purple-900 text-sm font-semibold">Última Compra</p>
-                        @if($ultimaCompra)
+                        @if($ultimaCompra && $ultimaCompra->created_at)
                             <p class="text-2xl font-bold mt-2 text-gray-900">${{ number_format($ultimaCompra->monto_total, 0) }}</p>
-                            <p class="text-gray-800 text-sm mt-1">{{ $ultimaCompra->created_at->setLocale('es')->format('d \\d\\e F \\d\\e Y - H:i') }}</p>
+                            <p class="text-gray-800 text-sm mt-1">{{ \Carbon\Carbon::parse($ultimaCompra->created_at)->locale('es')->format('d \\d\\e F \\d\\e Y - H:i') }}</p>
                         @else
                             <p class="text-2xl font-bold mt-2 text-gray-900">-</p>
                             <p class="text-gray-800 text-sm mt-1">Sin compras aún</p>
@@ -73,7 +73,7 @@
                                         <div class="flex justify-between items-start mb-2">
                                             <div>
                                                 <h3 class="font-semibold text-lg">Compra #{{ $compra->numero_compra }}</h3>
-                                                <p class="text-sm text-gray-500">{{ $compra->created_at->setLocale('es')->format('d \\d\\e F \\d\\e Y - H:i') }}</p>
+                                                <p class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($compra->created_at)->locale('es')->format('d \\d\\e F \\d\\e Y - H:i') }}</p>
                                             </div>
                                             <span class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full font-semibold">
                                                 {{ ucfirst($compra->estado) }}
