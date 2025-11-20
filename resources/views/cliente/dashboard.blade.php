@@ -131,7 +131,8 @@
                                 @method('PUT')
                                 <div>
                                     <label for="telefono" class="block text-sm font-semibold text-gray-700 mb-2">Nuevo Teléfono</label>
-                                    <input type="tel" id="telefono" name="telefono" value="{{ $user->telefono }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: +57 320 123 4567">
+                                    <input type="text" id="telefono" name="telefono" value="{{ $user->telefono }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: +57 320 123 4567" pattern="[0-9+\s\-()]+" inputmode="tel" maxlength="20">
+                                    <small class="text-gray-500 mt-1 block">Solo se permiten números, +, espacios y guiones</small>
                                 </div>
                                 <div class="flex gap-2">
                                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Guardar</button>
@@ -186,7 +187,7 @@
                                     </div>
                                     <div>
                                         <label for="telefono_dir" class="block text-sm font-semibold text-gray-700 mb-2">Teléfono (Opcional)</label>
-                                        <input type="tel" id="telefono_dir" name="telefono" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: +57 320 123 4567">
+                                        <input type="text" id="telefono_dir" name="telefono" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: +57 320 123 4567" pattern="[0-9+\s\-()]+" inputmode="tel" maxlength="20">
                                     </div>
                                 </div>
                                 <div class="flex gap-2">

@@ -12,7 +12,9 @@ class ClienteController extends Controller
     public function actualizarTelefono(Request $request)
     {
         $validated = $request->validate([
-            'telefono' => 'nullable|string|max:20',
+            'telefono' => 'nullable|string|max:20|regex:/^[0-9+\s\-()]*$/',
+        ], [
+            'telefono.regex' => 'El teléfono solo puede contener números, +, espacios, guiones y paréntesis.',
         ]);
 
         auth()->user()->update($validated);

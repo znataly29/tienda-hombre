@@ -20,7 +20,9 @@ class DireccionEnvioController extends Controller
             'ciudad' => 'required|string|max:255',
             'departamento' => 'required|string|max:255',
             'codigo_postal' => 'required|string|max:20',
-            'telefono' => 'nullable|string|max:20',
+            'telefono' => 'nullable|string|max:20|regex:/^[0-9+\s\-()]*$/',
+        ], [
+            'telefono.regex' => 'El teléfono solo puede contener números, +, espacios, guiones y paréntesis.',
         ]);
 
         // Si es la primera dirección, marcarla como principal
@@ -53,7 +55,9 @@ class DireccionEnvioController extends Controller
             'ciudad' => 'required|string|max:255',
             'departamento' => 'required|string|max:255',
             'codigo_postal' => 'required|string|max:20',
-            'telefono' => 'nullable|string|max:20',
+            'telefono' => 'nullable|string|max:20|regex:/^[0-9+\s\-()]*$/',
+        ], [
+            'telefono.regex' => 'El teléfono solo puede contener números, +, espacios, guiones y paréntesis.',
         ]);
 
         $direccion->update($validated);
