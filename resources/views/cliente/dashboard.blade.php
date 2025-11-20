@@ -157,37 +157,23 @@
                             <form action="{{ route('cliente.direcciones.store') }}" method="POST" class="space-y-4">
                                 @csrf
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="nombre_direccion" class="block text-sm font-semibold text-gray-700 mb-2">Nombre de la Dirección *</label>
-                                        <input type="text" id="nombre_direccion" name="nombre_direccion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Casa, Oficina" required>
-                                    </div>
-                                    <div>
-                                        <label for="ciudad" class="block text-sm font-semibold text-gray-700 mb-2">Ciudad *</label>
-                                        <input type="text" id="ciudad" name="ciudad" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Bogotá" required>
-                                    </div>
-                                    <div>
-                                        <label for="departamento" class="block text-sm font-semibold text-gray-700 mb-2">Departamento *</label>
-                                        <input type="text" id="departamento" name="departamento" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Cundinamarca" required>
-                                    </div>
-                                    <div>
-                                        <label for="codigo_postal" class="block text-sm font-semibold text-gray-700 mb-2">Código Postal *</label>
-                                        <input type="text" id="codigo_postal" name="codigo_postal" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: 110111" required>
-                                    </div>
                                     <div class="md:col-span-2">
-                                        <label for="calle" class="block text-sm font-semibold text-gray-700 mb-2">Calle *</label>
-                                        <input type="text" id="calle" name="calle" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Carrera 7" required>
+                                        <label for="direccion" class="block text-sm font-semibold text-gray-700 mb-2">Dirección *</label>
+                                        <input type="text" id="direccion" name="direccion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Carrera 7 #45-23" required>
                                     </div>
                                     <div>
-                                        <label for="numero" class="block text-sm font-semibold text-gray-700 mb-2">Número *</label>
-                                        <input type="text" id="numero" name="numero" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: 45-23" required>
+                                        <label for="barrio" class="block text-sm font-semibold text-gray-700 mb-2">Barrio *</label>
+                                        <input type="text" id="barrio" name="barrio" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: La Candelaria" required>
                                     </div>
                                     <div>
-                                        <label for="apartamento" class="block text-sm font-semibold text-gray-700 mb-2">Apartamento (Opcional)</label>
-                                        <input type="text" id="apartamento" name="apartamento" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: 301">
-                                    </div>
-                                    <div>
-                                        <label for="telefono_dir" class="block text-sm font-semibold text-gray-700 mb-2">Teléfono (Opcional)</label>
-                                        <input type="text" id="telefono_dir" name="telefono" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: +57 320 123 4567" pattern="[0-9+\s\-()]+" inputmode="tel" maxlength="20">
+                                        <label for="tipo_inmueble" class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Inmueble *</label>
+                                        <select id="tipo_inmueble" name="tipo_inmueble" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                                            <option value="">Selecciona tipo</option>
+                                            <option value="casa">Casa</option>
+                                            <option value="apartamento">Apartamento</option>
+                                            <option value="oficina">Oficina</option>
+                                            <option value="otro">Otro</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="flex gap-2">
@@ -208,12 +194,9 @@
                                     <div class="border rounded-lg p-4 @if($dir->es_principal) border-blue-500 bg-blue-50 @endif">
                                         <div class="flex justify-between items-start mb-2">
                                             <div>
-                                                <h3 class="font-semibold text-gray-900">{{ $dir->nombre_direccion }}</h3>
-                                                <p class="text-sm text-gray-600">{{ $dir->calle }} #{{ $dir->numero }}@if($dir->apartamento), {{ $dir->apartamento }}@endif</p>
-                                                <p class="text-sm text-gray-600">{{ $dir->ciudad }}, {{ $dir->departamento }} - CP: {{ $dir->codigo_postal }}</p>
-                                                @if($dir->telefono)
-                                                    <p class="text-sm text-gray-600">Tel: {{ $dir->telefono }}</p>
-                                                @endif
+                                                <h3 class="font-semibold text-gray-900">{{ $dir->barrio }}</h3>
+                                                <p class="text-sm text-gray-600">{{ $dir->direccion }}</p>
+                                                <p class="text-sm text-gray-600">Tipo: {{ ucfirst($dir->tipo_inmueble) }}</p>
                                             </div>
                                             @if($dir->es_principal)
                                                 <span class="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">Principal</span>

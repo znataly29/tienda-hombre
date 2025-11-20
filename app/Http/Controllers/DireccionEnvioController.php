@@ -13,16 +13,9 @@ class DireccionEnvioController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre_direccion' => 'required|string|max:255',
-            'calle' => 'required|string|max:255',
-            'numero' => 'required|string|max:50',
-            'apartamento' => 'nullable|string|max:50',
-            'ciudad' => 'required|string|max:255',
-            'departamento' => 'required|string|max:255',
-            'codigo_postal' => 'required|string|max:20',
-            'telefono' => 'nullable|string|max:20|regex:/^[0-9+\s\-()]*$/',
-        ], [
-            'telefono.regex' => 'El teléfono solo puede contener números, +, espacios, guiones y paréntesis.',
+            'direccion' => 'required|string|max:255',
+            'barrio' => 'required|string|max:255',
+            'tipo_inmueble' => 'required|string|in:casa,apartamento,oficina,otro',
         ]);
 
         // Si es la primera dirección, marcarla como principal
@@ -48,16 +41,9 @@ class DireccionEnvioController extends Controller
         }
 
         $validated = $request->validate([
-            'nombre_direccion' => 'required|string|max:255',
-            'calle' => 'required|string|max:255',
-            'numero' => 'required|string|max:50',
-            'apartamento' => 'nullable|string|max:50',
-            'ciudad' => 'required|string|max:255',
-            'departamento' => 'required|string|max:255',
-            'codigo_postal' => 'required|string|max:20',
-            'telefono' => 'nullable|string|max:20|regex:/^[0-9+\s\-()]*$/',
-        ], [
-            'telefono.regex' => 'El teléfono solo puede contener números, +, espacios, guiones y paréntesis.',
+            'direccion' => 'required|string|max:255',
+            'barrio' => 'required|string|max:255',
+            'tipo_inmueble' => 'required|string|in:casa,apartamento,oficina,otro',
         ]);
 
         $direccion->update($validated);
