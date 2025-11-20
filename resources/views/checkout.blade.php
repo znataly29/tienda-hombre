@@ -76,11 +76,39 @@
                         {{-- DATOS DEL COMPRADOR --}}
                         <div class="bg-gray-50 border rounded p-4 mb-6">
                             <h2 class="text-xl font-semibold mb-4">Datos del Comprador</h2>
-                            <div class="space-y-2">
-                                <p><strong>Nombre:</strong> {{ $usuario->name }}</p>
-                                <p><strong>Correo:</strong> {{ $usuario->email }}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Información Personal -->
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 mb-3">Información Personal</h3>
+                                    <div class="space-y-2">
+                                        <p><strong>Nombre:</strong> {{ $usuario->name }}</p>
+                                        <p><strong>Correo:</strong> {{ $usuario->email }}</p>
+                                        <p><strong>Teléfono:</strong> {{ $usuario->telefono ?? 'No registrado' }}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Dirección de Envío -->
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 mb-3">Dirección de Envío</h3>
+                                    @php
+                                        $direccionPrincipal = $direcciones->firstWhere('es_principal', true);
+                                    @endphp
+
+                                    @if($direccionPrincipal)
+                                        <div class="bg-white p-3 rounded border border-blue-200">
+                                            <p class="text-sm"><strong>{{ $direccionPrincipal->barrio }}</strong></p>
+                                            <p class="text-sm">{{ $direccionPrincipal->direccion }}</p>
+                                            <p class="text-sm">Tipo: {{ ucfirst($direccionPrincipal->tipo_inmueble) }}</p>
+                                        </div>
+                                    @else
+                                        <div class="bg-yellow-50 border border-yellow-200 rounded p-3">
+                                            <p class="text-sm text-yellow-800">No tienes una dirección principal registrada</p>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
-                            <a href="{{ route('profile.edit') }}" class="inline-block mt-3 text-blue-600 hover:underline text-sm">
+
+                            <a href="{{ route('cliente.dashboard') }}" class="inline-block mt-3 text-blue-600 hover:underline text-sm">
                                 Editar datos
                             </a>
                         </div>

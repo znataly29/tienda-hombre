@@ -6,6 +6,7 @@ use App\Models\Carrito;
 use App\Models\Compra;
 use App\Models\Inventario;
 use App\Models\MovimientoInventario;
+use App\Models\DireccionEnvio;
 use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
@@ -29,7 +30,10 @@ class CheckoutController extends Controller
         $envio = 5000; // Envío fijo (puedes hacer dinámico después)
         $total = $subtotal + $envio;
 
-        return view('checkout', compact('carrito', 'usuario', 'subtotal', 'envio', 'total'));
+        // Obtener direcciones del usuario
+        $direcciones = DireccionEnvio::where('usuario_id', $usuario->id)->get();
+
+        return view('checkout', compact('carrito', 'usuario', 'subtotal', 'envio', 'total', 'direcciones'));
     }
 
     /**
