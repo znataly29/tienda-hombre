@@ -61,11 +61,6 @@
                         <p class="text-sm text-gray-600">Crear, editar o eliminar productos</p>
                     </a>
 
-                    <a href="{{ route('admin.ajustes.index') }}" class="p-4 border border-yellow-300 rounded-lg hover:bg-yellow-50 transition">
-                        <p class="font-semibold text-yellow-600">Ajustes de Inventario</p>
-                        <p class="text-sm text-gray-600">Registrar entradas y salidas</p>
-                    </a>
-
                     <a href="{{ route('admin.reportes.ventas', ['formato' => 'pdf']) }}" class="p-4 border border-red-300 rounded-lg hover:bg-red-50 transition">
                         <p class="font-semibold text-red-600">Descargar Reporte de Ventas</p>
                         <p class="text-sm text-gray-600">Reporte en PDF (últimas ventas)</p>
