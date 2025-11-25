@@ -154,27 +154,40 @@
                         <!-- Formulario para agregar dirección -->
                         <div id="addAddressForm" class="hidden bg-gray-50 p-6 rounded-lg mb-6 border">
                             <h3 class="text-lg font-semibold text-gray-900 mb-4">Nueva Dirección</h3>
+                            
+                            <!-- Mostrar errores de validación -->
+                            @if ($errors->any())
+                                <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                                    <p class="text-red-700 font-semibold mb-2">Por favor corrige los siguientes errores:</p>
+                                    <ul class="text-red-600 text-sm space-y-1">
+                                        @foreach ($errors->all() as $error)
+                                            <li>• {{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                            
                             <form id="formAgregarDireccion" action="{{ route('cliente.direcciones.store') }}" method="POST" class="space-y-4">
                                 @csrf
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="md:col-span-2">
                                         <label for="direccion" class="block text-sm font-semibold text-gray-700 mb-2">Dirección * (mín. 5 caracteres)</label>
-                                        <input type="text" id="direccion" name="direccion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Carrera 7 #45-23" minlength="5" maxlength="255" required>
+                                        <input type="text" id="direccion" name="direccion" class="w-full px-4 py-2 border @error('direccion') border-red-500 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Carrera 7 #45-23" minlength="5" maxlength="255" required>
                                         @error('direccion')<span class="text-red-600 text-sm">{{ $message }}</span>@enderror
                                     </div>
                                     <div>
                                         <label for="barrio" class="block text-sm font-semibold text-gray-700 mb-2">Barrio * (mín. 3 caracteres)</label>
-                                        <input type="text" id="barrio" name="barrio" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: La Candelaria" minlength="3" maxlength="255" required>
+                                        <input type="text" id="barrio" name="barrio" class="w-full px-4 py-2 border @error('barrio') border-red-500 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: La Candelaria" minlength="3" maxlength="255" required>
                                         @error('barrio')<span class="text-red-600 text-sm">{{ $message }}</span>@enderror
                                     </div>
                                     <div>
                                         <label for="tipo_inmueble" class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Inmueble *</label>
-                                        <select id="tipo_inmueble" name="tipo_inmueble" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                                        <select id="tipo_inmueble" name="tipo_inmueble" class="w-full px-4 py-2 border @error('tipo_inmueble') border-red-500 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:border-blue-500" required>
                                             <option value="">Selecciona tipo</option>
-                                            <option value="casa">Casa</option>
-                                            <option value="apartamento">Apartamento</option>
-                                            <option value="oficina">Oficina</option>
-                                            <option value="otro">Otro</option>
+                                            <option value="casa" @selected(old('tipo_inmueble') === 'casa')>Casa</option>
+                                            <option value="apartamento" @selected(old('tipo_inmueble') === 'apartamento')>Apartamento</option>
+                                            <option value="oficina" @selected(old('tipo_inmueble') === 'oficina')>Oficina</option>
+                                            <option value="otro" @selected(old('tipo_inmueble') === 'otro')>Otro</option>
                                         </select>
                                         @error('tipo_inmueble')<span class="text-red-600 text-sm">{{ $message }}</span>@enderror
                                     </div>
@@ -249,6 +262,13 @@
 </x-app-layout>
 
 <script>
+// Si hay errores de validación, mostrar formulario
+document.addEventListener('DOMContentLoaded', function() {
+    @if($errors->any())
+        document.getElementById('addAddressForm').classList.remove('hidden');
+    @endif
+});
+
 function cerrarFormularioDireccion() {
     const addForm = document.getElementById('addAddressForm');
     const form = document.getElementById('formAgregarDireccion');
