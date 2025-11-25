@@ -250,8 +250,20 @@
 
 <script>
 function cerrarFormularioDireccion() {
-    document.getElementById('addAddressForm').classList.add('hidden');
-    document.getElementById('formAgregarDireccion').reset();
+    const addForm = document.getElementById('addAddressForm');
+    const form = document.getElementById('formAgregarDireccion');
+    const h3 = addForm.querySelector('h3');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const methodInput = form.querySelector('input[name="_method"]');
+    
+    addForm.classList.add('hidden');
+    form.reset();
+    
+    // Resetear a crear nuevo
+    h3.textContent = 'Nueva Dirección';
+    form.action = '{{ route('cliente.direcciones.store') }}';
+    submitBtn.textContent = 'Guardar Dirección';
+    if (methodInput) methodInput.remove();
 }
 
 function abrirEditarDireccion(dirId, direccion, barrio, tipoInmueble) {
@@ -262,8 +274,7 @@ function abrirEditarDireccion(dirId, direccion, barrio, tipoInmueble) {
     
     // Actualizar título y acción del formulario
     h3.textContent = 'Editar Dirección';
-    form.action = `/cliente/direcciones/${dirId}`;
-    form.method = 'POST';
+    form.action = `{{ route('cliente.direcciones.update', ':id') }}`.replace(':id', dirId);
     
     // Agregar _method PUT para Laravel
     let methodInput = form.querySelector('input[name="_method"]');
@@ -271,7 +282,7 @@ function abrirEditarDireccion(dirId, direccion, barrio, tipoInmueble) {
         methodInput = document.createElement('input');
         methodInput.type = 'hidden';
         methodInput.name = '_method';
-        form.appendChild(methodInput);
+        form.insertBefore(methodInput, form.querySelector('input[name="csrf"]'));
     }
     methodInput.value = 'PUT';
     
@@ -291,18 +302,20 @@ function abrirEditarDireccion(dirId, direccion, barrio, tipoInmueble) {
     addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Restablecer formulario al cancelar
+// Restablecer formulario al cancelar o después de agregar
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('formAgregarDireccion');
     
-    // Al hacer submit, hacer reset después si es agregar nuevo
+    // Al hacer submit
     if (form) {
         form.addEventListener('submit', function(e) {
-            if (form.action === '{{ route('cliente.direcciones.store') }}' || !form.action.includes('/cliente/direcciones/')) {
+            const isCreating = form.action === '{{ route('cliente.direcciones.store') }}';
+            
+            // Si es crear nuevo, resetear después
+            if (isCreating) {
                 setTimeout(() => {
-                    form.reset();
-                    document.getElementById('addAddressForm').classList.add('hidden');
-                }, 500);
+                    cerrarFormularioDireccion();
+                }, 1000);
             }
         });
     }
