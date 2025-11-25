@@ -154,16 +154,18 @@
                         <!-- Formulario para agregar dirección -->
                         <div id="addAddressForm" class="hidden bg-gray-50 p-6 rounded-lg mb-6 border">
                             <h3 class="text-lg font-semibold text-gray-900 mb-4">Nueva Dirección</h3>
-                            <form action="{{ route('cliente.direcciones.store') }}" method="POST" class="space-y-4">
+                            <form id="formAgregarDireccion" action="{{ route('cliente.direcciones.store') }}" method="POST" class="space-y-4">
                                 @csrf
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="md:col-span-2">
                                         <label for="direccion" class="block text-sm font-semibold text-gray-700 mb-2">Dirección * (mín. 5 caracteres)</label>
                                         <input type="text" id="direccion" name="direccion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: Carrera 7 #45-23" minlength="5" maxlength="255" required>
+                                        @error('direccion')<span class="text-red-600 text-sm">{{ $message }}</span>@enderror
                                     </div>
                                     <div>
                                         <label for="barrio" class="block text-sm font-semibold text-gray-700 mb-2">Barrio * (mín. 3 caracteres)</label>
                                         <input type="text" id="barrio" name="barrio" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ej: La Candelaria" minlength="3" maxlength="255" required>
+                                        @error('barrio')<span class="text-red-600 text-sm">{{ $message }}</span>@enderror
                                     </div>
                                     <div>
                                         <label for="tipo_inmueble" class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Inmueble *</label>
@@ -174,11 +176,12 @@
                                             <option value="oficina">Oficina</option>
                                             <option value="otro">Otro</option>
                                         </select>
+                                        @error('tipo_inmueble')<span class="text-red-600 text-sm">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
                                 <div class="flex gap-2">
                                     <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Guardar Dirección</button>
-                                    <button type="button" onclick="document.getElementById('addAddressForm').classList.add('hidden')" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400">Cancelar</button>
+                                    <button type="button" onclick="cerrarFormularioDireccion()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400">Cancelar</button>
                                 </div>
                             </form>
                         </div>
@@ -191,7 +194,7 @@
                         @else
                             <div class="space-y-3">
                                 @foreach($direcciones as $dir)
-                                    <div class="border rounded-lg p-4 @if($dir->es_principal) border-blue-500 bg-blue-50 @endif">
+                                    <div id="direccion-{{ $dir->id }}" class="border rounded-lg p-4 @if($dir->es_principal) border-blue-500 bg-blue-50 @endif">
                                         <div class="flex justify-between items-start mb-2">
                                             <div>
                                                 <h3 class="font-semibold text-gray-900">{{ $dir->barrio }}</h3>
@@ -203,7 +206,7 @@
                                             @endif
                                         </div>
                                         <div class="flex gap-3 text-sm mt-3 pt-3 border-t">
-                                            <button onclick="editAddress({{ $dir->id }})" class="text-blue-600 hover:text-blue-800 font-semibold">Editar</button>
+                                            <button type="button" onclick="abrirEditarDireccion({{ $dir->id }}, '{{ addslashes($dir->direccion) }}', '{{ addslashes($dir->barrio) }}', '{{ $dir->tipo_inmueble }}')" class="text-blue-600 hover:text-blue-800 font-semibold">Editar</button>
                                             @if(!$dir->es_principal)
                                                 <form action="{{ route('cliente.direcciones.principal', $dir->id) }}" method="POST" class="inline">
                                                     @csrf
@@ -244,3 +247,64 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+function cerrarFormularioDireccion() {
+    document.getElementById('addAddressForm').classList.add('hidden');
+    document.getElementById('formAgregarDireccion').reset();
+}
+
+function abrirEditarDireccion(dirId, direccion, barrio, tipoInmueble) {
+    // Cambiar el formulario para editar
+    const form = document.getElementById('formAgregarDireccion');
+    const addForm = document.getElementById('addAddressForm');
+    const h3 = addForm.querySelector('h3');
+    
+    // Actualizar título y acción del formulario
+    h3.textContent = 'Editar Dirección';
+    form.action = `/cliente/direcciones/${dirId}`;
+    form.method = 'POST';
+    
+    // Agregar _method PUT para Laravel
+    let methodInput = form.querySelector('input[name="_method"]');
+    if (!methodInput) {
+        methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        form.appendChild(methodInput);
+    }
+    methodInput.value = 'PUT';
+    
+    // Rellenar los campos
+    document.getElementById('direccion').value = direccion;
+    document.getElementById('barrio').value = barrio;
+    document.getElementById('tipo_inmueble').value = tipoInmueble;
+    
+    // Mostrar el formulario
+    addForm.classList.remove('hidden');
+    
+    // Cambiar textos de botones
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.textContent = 'Actualizar Dirección';
+    
+    // Scroll al formulario
+    addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Restablecer formulario al cancelar
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('formAgregarDireccion');
+    
+    // Al hacer submit, hacer reset después si es agregar nuevo
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            if (form.action === '{{ route('cliente.direcciones.store') }}' || !form.action.includes('/cliente/direcciones/')) {
+                setTimeout(() => {
+                    form.reset();
+                    document.getElementById('addAddressForm').classList.add('hidden');
+                }, 500);
+            }
+        });
+    }
+});
+</script>
