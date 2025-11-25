@@ -146,7 +146,7 @@
                     <div class="bg-white rounded-lg shadow-sm sm:rounded-lg p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h2 class="text-2xl font-bold text-gray-900">Mis Direcciones</h2>
-                            <button onclick="document.getElementById('addAddressForm').classList.toggle('hidden')" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">
+                            <button type="button" onclick="abrirAgregarDireccion()" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">
                                 + Agregar Dirección
                             </button>
                         </div>
@@ -262,6 +262,8 @@
 </x-app-layout>
 
 <script>
+let direccionEditando = null;
+
 // Si hay errores de validación, mostrar formulario
 document.addEventListener('DOMContentLoaded', function() {
     @if($errors->any())
@@ -269,75 +271,74 @@ document.addEventListener('DOMContentLoaded', function() {
     @endif
 });
 
-function cerrarFormularioDireccion() {
+function abrirAgregarDireccion() {
+    direccionEditando = null;
     const addForm = document.getElementById('addAddressForm');
-    const form = document.getElementById('formAgregarDireccion');
     const h3 = addForm.querySelector('h3');
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const methodInput = form.querySelector('input[name="_method"]');
+    const submitBtn = addForm.querySelector('button[type="submit"]');
+    const form = document.getElementById('formAgregarDireccion');
     
-    addForm.classList.add('hidden');
+    h3.textContent = 'Nueva Dirección';
+    submitBtn.textContent = 'Guardar Dirección';
     form.reset();
     
-    // Resetear a crear nuevo
-    h3.textContent = 'Nueva Dirección';
-    form.action = '{{ route('cliente.direcciones.store') }}';
-    submitBtn.textContent = 'Guardar Dirección';
+    // Limpiar el input _method si existe
+    const methodInput = form.querySelector('input[name="_method"]');
     if (methodInput) methodInput.remove();
-}
-
-function abrirEditarDireccion(dirId, direccion, barrio, tipoInmueble) {
-    // Cambiar el formulario para editar
-    const form = document.getElementById('formAgregarDireccion');
-    const addForm = document.getElementById('addAddressForm');
-    const h3 = addForm.querySelector('h3');
     
-    // Actualizar título y acción del formulario
-    h3.textContent = 'Editar Dirección';
-    form.action = `{{ route('cliente.direcciones.update', ':id') }}`.replace(':id', dirId);
-    
-    // Agregar _method PUT para Laravel
-    let methodInput = form.querySelector('input[name="_method"]');
-    if (!methodInput) {
-        methodInput = document.createElement('input');
-        methodInput.type = 'hidden';
-        methodInput.name = '_method';
-        form.insertBefore(methodInput, form.querySelector('input[name="csrf"]'));
-    }
-    methodInput.value = 'PUT';
-    
-    // Rellenar los campos
-    document.getElementById('direccion').value = direccion;
-    document.getElementById('barrio').value = barrio;
-    document.getElementById('tipo_inmueble').value = tipoInmueble;
-    
-    // Mostrar el formulario
     addForm.classList.remove('hidden');
-    
-    // Cambiar textos de botones
-    const submitBtn = form.querySelector('button[type="submit"]');
-    submitBtn.textContent = 'Actualizar Dirección';
-    
-    // Scroll al formulario
     addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Restablecer formulario al cancelar o después de agregar
+function cerrarFormularioDireccion() {
+    document.getElementById('addAddressForm').classList.add('hidden');
+    direccionEditando = null;
+}
+
+function abrirEditarDireccion(dirId, direccion, barrio, tipoInmueble) {
+    direccionEditando = dirId;
+    const addForm = document.getElementById('addAddressForm');
+    const form = document.getElementById('formAgregarDireccion');
+    const h3 = addForm.querySelector('h3');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    
+    h3.textContent = 'Editar Dirección';
+    submitBtn.textContent = 'Actualizar Dirección';
+    
+    // Rellenar los campos
+    form.querySelector('#direccion').value = direccion;
+    form.querySelector('#barrio').value = barrio;
+    form.querySelector('#tipo_inmueble').value = tipoInmueble;
+    
+    // Limpiar y agregar _method
+    let methodInput = form.querySelector('input[name="_method"]');
+    if (methodInput) methodInput.remove();
+    
+    methodInput = document.createElement('input');
+    methodInput.type = 'hidden';
+    methodInput.name = '_method';
+    methodInput.value = 'PUT';
+    form.appendChild(methodInput);
+    
+    // Mostrar el formulario
+    addForm.classList.remove('hidden');
+    addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Interceptar el envío del formulario
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('formAgregarDireccion');
     
-    // Al hacer submit
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            const isCreating = form.action === '{{ route('cliente.direcciones.store') }}';
-            
-            // Si es crear nuevo, resetear después
-            if (isCreating) {
-                setTimeout(() => {
-                    cerrarFormularioDireccion();
-                }, 1000);
-            }
-        });
-    }
+    form.addEventListener('submit', function(e) {
+        if (direccionEditando) {
+            // Estamos editando
+            form.action = `/cliente/direcciones/${direccionEditando}`;
+        } else {
+            // Estamos agregando
+            form.action = '{{ route('cliente.direcciones.store') }}';
+            const methodInput = form.querySelector('input[name="_method"]');
+            if (methodInput) methodInput.remove();
+        }
+    });
 });
 </script>
