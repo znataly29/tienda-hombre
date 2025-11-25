@@ -69,10 +69,16 @@ class ProductoController extends Controller
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
             'precio' => 'required|numeric|min:0',
-            'categoria' => 'nullable|string|max:100',
-            'talla' => 'nullable|string|max:20',
+            'categoria' => 'required|string|in:Camisetas,Camisas,Sudaderas,Chaquetas,Shorts,Pantalones',
+            'talla' => 'required|string|in:M,L,XL,30,32,34,36',
             'cantidad' => 'required|integer|min:1',
+        ], [
+            'categoria.in' => 'La categoría seleccionada no es válida.',
+            'talla.in' => 'La talla seleccionada no es válida.',
         ]);
+
+        // Validar combinación de categoría y talla
+        $this->validarCategoriaTalla($datos['categoria'], $datos['talla']);
 
         // Extraer cantidad antes de crear el producto
         $cantidad = $datos['cantidad'];
@@ -81,8 +87,8 @@ class ProductoController extends Controller
         // Normalizar los datos (trim)
         $datos['nombre'] = trim($datos['nombre']);
         $datos['descripcion'] = trim($datos['descripcion'] ?? '');
-        $datos['categoria'] = trim($datos['categoria'] ?? '');
-        $datos['talla'] = trim($datos['talla'] ?? '');
+        $datos['categoria'] = trim($datos['categoria']);
+        $datos['talla'] = trim($datos['talla']);
 
         // Crear producto
         $producto = Producto::create($datos);
@@ -108,10 +114,16 @@ class ProductoController extends Controller
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
             'precio' => 'required|numeric|min:0',
-            'categoria' => 'nullable|string|max:100',
-            'talla' => 'nullable|string|max:20',
+            'categoria' => 'required|string|in:Camisetas,Camisas,Sudaderas,Chaquetas,Shorts,Pantalones',
+            'talla' => 'required|string|in:M,L,XL,30,32,34,36',
             'cantidad' => 'required|integer|min:1',
+        ], [
+            'categoria.in' => 'La categoría seleccionada no es válida.',
+            'talla.in' => 'La talla seleccionada no es válida.',
         ]);
+
+        // Validar combinación de categoría y talla
+        $this->validarCategoriaTalla($datos['categoria'], $datos['talla']);
 
         // Extraer cantidad antes de actualizar el producto
         $cantidad = $datos['cantidad'];
@@ -120,8 +132,8 @@ class ProductoController extends Controller
         // Normalizar los datos (trim)
         $datos['nombre'] = trim($datos['nombre']);
         $datos['descripcion'] = trim($datos['descripcion'] ?? '');
-        $datos['categoria'] = trim($datos['categoria'] ?? '');
-        $datos['talla'] = trim($datos['talla'] ?? '');
+        $datos['categoria'] = trim($datos['categoria']);
+        $datos['talla'] = trim($datos['talla']);
 
         $producto->update($datos);
 
@@ -142,5 +154,37 @@ class ProductoController extends Controller
     {
         $producto->delete();
         return back()->with('mensaje', 'Producto eliminado');
+    }
+
+    /**
+     * Valida que la combinación de categoría y talla sea válida
+     */
+    private function validarCategoriaTalla(string $categoria, string $talla)
+    {
+        // Reglas: categoría -> tallas permitidas
+        $validaciones = [
+            'Camisetas' => ['M', 'L', 'XL'],
+            'Camisas' => ['M', 'L', 'XL'],
+            'Sudaderas' => ['M', 'L', 'XL'],
+            'Chaquetas' => ['M', 'L', 'XL'],
+            'Shorts' => ['M', 'L', 'XL'],
+            'Pantalones' => ['30', '32', '34', '36']
+        ];
+
+        // Verificar si la categoría existe en nuestras reglas
+        if (!isset($validaciones[$categoria])) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'categoria' => 'Categoría no reconocida.'
+            ]);
+        }
+
+        // Verificar si la talla es válida para esta categoría
+        if (!in_array($talla, $validaciones[$categoria])) {
+            $tallasPermitidas = implode(', ', $validaciones[$categoria]);
+            
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'talla' => "Para {$categoria} solo están disponibles las tallas: {$tallasPermitidas}"
+            ]);
+        }
     }
 }
